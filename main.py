@@ -1,4 +1,4 @@
-import asyncio
+
 from threading import Thread
 
 from API import API_KEY, API_SEKRET
@@ -182,36 +182,23 @@ def create_order_short_2():
 
 def work_long():
     while True:
-        if 1 <= on_position_long(symbol) < 2:
+        on_position_long1 = on_position_long(symbol)
+        if 1 <= on_position_long1 < 2:
             create_order_long_2()
-        elif on_position_long(symbol) < 1:
+        elif on_position_long1 < 1:
                 create_order_long_1()
 
 
 
 def work_short():
     while True:
-        if 1 <= on_position_short(symbol) < 2:
+        on_position_short1 = on_position_short(symbol)
+        if 1 <= on_position_short1 < 2:
             create_order_short_2()
-        elif on_position_short(symbol) < 1:
+        elif on_position_short1 < 1:
                 create_order_short_1()
 
 
-
-
-# async def main():
-#
-#     # await work_long(symbol)
-#     # await work_short(symbol)
-#     # await price_symbol(symbol)
-#     # await last_limit_order(symbol)
-#     # await balans_open_positions(symbol)
-#     # await position_on(symbol)
-#     # await quantity_long(quantity_dollars)
-#     # await limit_order_long_1()
-#     # await limit_order_long_2()
-#     # await on_position_long(symbol)
-#     # await on_position_short(symbol)
 
 if __name__ == "__main__":
     Thread(target=work_long).start()

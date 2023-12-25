@@ -1,39 +1,33 @@
 from binance.client import Client
+from API import API_KEY, API_SEKRET
 import pandas
-import time
+import asyncio
 
 
-client = Client(api_key, api_sekret)
+client = Client(API_KEY, API_SEKRET)
+
+#==========================
+symbol = '1000PEPEUSDT'
+quantity_dollars = 30
+round_tiker = 7
+#=============================
 
 
-
-tiker = 'SUIUSDT'
-quantity_dollars = 50
-round_tiker = 4
-
-
-
-# Дістаємо ціну
-def price_now():
-    price_tiker = client.futures_mark_price(symbol=tiker)
-    price_tiker = float(price_tiker['markPrice'])
-    print('Ціна: ',price_tiker)
-    return price_tiker
-
-
-def last_limit_order():
-    trades = client.futures_account_trades(symbol=tiker)
+async def last_limit_order():
+    trades = client.futures_account_trades(symbol=symbol)
     last_trade = float(trades[-1]['price'])
     print(last_trade)
     return last_trade
 
-
-price_test = price_now()
+price_test = 0
+async def price_onow():
+    global price_test
+    price_test = await last_limit_order()
 
 
 # Обчислення загального балансу в позиції
-def balans():
-    open_positions = client.futures_position_information(symbol=tiker)
+async def balans():
+    open_positions = client.futures_position_information(symbol=symbol)
     for position in open_positions:
         bal1 = float(position['positionAmt'])
     bal1 = round(bal1*price_test, 1)
@@ -42,10 +36,10 @@ def balans():
 
 
 #Визначання збитку в позиції
-def position_on():
-    positions = client.futures_position_information(symbol=tiker)
+async def position_on():
+    positions = client.futures_position_information(symbol=symbol)
     for position in positions:
-        if position['symbol'] == tiker:
+        if position['symbol'] == symbol:
             entry_price = float(position['entryPrice'])
             mark_price = float(position['markPrice'])
             quantity = float(position['positionAmt'])
@@ -55,8 +49,8 @@ def position_on():
 
 
 # Визначаємо де будуть стояти лімітки
-def limit_order_max():
-    bal_test = balans()
+async def limit_order_max(price_test):
+    bal_test = await balans()
     if bal_test < quantity_dollars*-3 or bal_test > quantity_dollars*5:
         elem_max = round(price_test + (price_test*0.06), round_tiker)
     elif bal_test < quantity_dollars*-2 or bal_test > quantity_dollars*3:
@@ -67,8 +61,8 @@ def limit_order_max():
     return elem_max
 
 
-def limit_order_min():
-    bal_test = balans()
+async def limit_order_min(price_test):
+    bal_test = await balans()
     if bal_test < quantity_dollars*-5 or bal_test > quantity_dollars*3:
         elem_min = round(price_test - (price_test*0.06), round_tiker)
     elif bal_test < quantity_dollars*-3 or bal_test > quantity_dollars*2:
@@ -80,8 +74,8 @@ def limit_order_min():
 
 
 # Визначаємо кількість у позиції
-def quantity1_long():
-    bal_test = balans()
+async def quantity1_long():
+    bal_test = await balans()
     quantity_t = round(quantity_dollars/price_test)
     if bal_test > quantity_dollars*2.1:
         quantity_long = round(10/price_test)
@@ -93,8 +87,8 @@ def quantity1_long():
     return quantity_long
 
 
-def quantity1_short():
-    bal_test = balans()
+async def quantity1_short():
+    bal_test = await balans()
     quantity_t = round(quantity_dollars/price_test)
     if bal_test < quantity_dollars*-2.1:
         quantity_short = round(10/price_test)
@@ -107,15 +101,15 @@ def quantity1_short():
 
 
 # Визначаємо кількість відкритих позицій
-def pozity():
-    poz_t1 = len(pandas.DataFrame(client.futures_get_open_orders(symbol=tiker)))
+async def pozity():
+    poz_t1 = len(pandas.DataFrame(client.futures_get_open_orders(symbol=symbol)))
     print('Поставлено ліміток: ', poz_t1)
     return poz_t1
 
 #Закриваємо позицію
-def clouse_pozision():
-    client.futures_cancel_all_open_orders(symbol=tiker)
-    open_positions = client.futures_position_information(symbol=tiker)
+async def clouse_pozision():
+    client.futures_cancel_all_open_orders(symbol=symbol)
+    open_positions = client.futures_position_information(symbol=symbol)
     for position in open_positions:
         if float(position['positionAmt']) > 0:
             side = 'SELL'
@@ -125,7 +119,7 @@ def clouse_pozision():
 
         # Закриття позиції
         order = client.futures_create_order(
-            symbol=tiker,
+            symbol=symbol,
             side=side,
             type='MARKET',
             quantity=quantity
@@ -134,38 +128,54 @@ def clouse_pozision():
 
 
 # Виставляємо лімітки
-start_stop = True
 
-while start_stop:
-    try:
-        if position_on() > quantity_dollars*-2:
-            if pozity() < 2:
-                price_test = last_limit_order()
-                client.futures_cancel_all_open_orders(symbol=tiker)
-                client.futures_create_order(
-                    symbol=tiker,
-                    side='SELL',
-                    type='LIMIT',
-                    quantity=quantity1_short(),
-                    price=limit_order_max(),
-                    timeInForce='GTC'
-                )
-                client.futures_create_order(
-                    symbol=tiker,
-                    side='BUY',
-                    type='LIMIT',
-                    quantity=quantity1_long(),
-                    price=limit_order_min(),
-                    timeInForce='GTC'
-                )
-                print('поставив лімітку short: ', limit_order_max())
-                print('поставив лімітку long: ', limit_order_min())
+async def create_order_short():
+    print_order = client.futures_create_order(
+        symbol=symbol,
+        side='SELL',
+        type='LIMIT',
+        quantity=await quantity1_short(),
+        price=await limit_order_max(price_test),
+        timeInForce='GTC'
+    )
+    print(print_order)
+
+async def create_order_long():
+    print_order = client.futures_create_order(
+        symbol=symbol,
+        side='BUY',
+        type='LIMIT',
+        quantity=await quantity1_long(),
+        price=await limit_order_min(price_test),
+        timeInForce='GTC'
+    )
+    print(print_order)
+
+
+async def main():
+    while True:
+        try:
+            if await position_on() > quantity_dollars*-2:
+                if await pozity() < 2:
+                    global price_test
+                    price_test = await last_limit_order()
+                    client.futures_cancel_all_open_orders(symbol=symbol)
+                    await create_order_long()
+                    await create_order_short()
+
+
+                    print('поставив лімітку short: ', await limit_order_max(price_test))
+                    print('поставив лімітку long: ', await limit_order_min(price_test))
+                else:
+                    print('Чекаю')
             else:
-                time.sleep(1)
-                print('Чекаю')
-        else:
-            clouse_pozision()
-            start_stop = False
-    except:
-        print('Помилка!')
-        time.sleep(1)
+                await clouse_pozision()
+                break
+        except:
+            print('Помилка!')
+            await asyncio.sleep(1)
+
+if __name__ == "__main__":
+    loop = asyncio.get_event_loop()
+    loop.create_task(main())
+    loop.run_forever()

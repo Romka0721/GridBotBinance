@@ -2,8 +2,6 @@ from binance.client import Client
 import pandas
 import time
 
-api_key = 'oRItaq3XZvbaPoUtsJhWMUKqANQCrBj6J2ZWZe33uSTjHOwi1jBzBEg87i4vM3CQ'
-api_sekret = 'MHkuhNjS1101IvT3MYor41LehLIk93INL7hunFUUPM5VNUahn0A0jBtNkFX7ziYN'
 
 client = Client(api_key, api_sekret)
 

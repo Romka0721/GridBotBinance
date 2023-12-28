@@ -8,7 +8,7 @@ client = Client(API_KEY, API_SEKRET)
 
 #==========================
 symbol = '1000PEPEUSDT'
-quantity_dollars = 30
+quantity_dollars = 80
 round_tiker = 7
 #=============================
 
@@ -77,9 +77,9 @@ async def limit_order_min(price_test):
 async def quantity1_long():
     bal_test = await balans()
     quantity_t = round(quantity_dollars/price_test)
-    if bal_test > quantity_dollars*2.1:
+    if bal_test > quantity_dollars*3:
         quantity_long = round(10/price_test)
-    elif bal_test > quantity_dollars*1.1:
+    elif bal_test > quantity_dollars*1.6:
         quantity_long = round((quantity_dollars*0.6)/price_test)
     else:
         quantity_long = quantity_t
@@ -90,9 +90,9 @@ async def quantity1_long():
 async def quantity1_short():
     bal_test = await balans()
     quantity_t = round(quantity_dollars/price_test)
-    if bal_test < quantity_dollars*-2.1:
+    if bal_test < quantity_dollars*-3:
         quantity_short = round(10/price_test)
-    elif bal_test < quantity_dollars*-1.1:
+    elif bal_test < quantity_dollars*-1.6:
         quantity_short = round((quantity_dollars*0.6)/price_test)
     else:
         quantity_short = quantity_t
@@ -155,12 +155,13 @@ async def create_order_long():
 async def main():
     while True:
         try:
+            global price_test
             if await position_on() > quantity_dollars*-2:
                 if await pozity() < 2:
-                    global price_test
-                    price_test = await last_limit_order()
                     client.futures_cancel_all_open_orders(symbol=symbol)
+                    price_test = await last_limit_order()
                     await create_order_long()
+                    price_test = await last_limit_order()
                     await create_order_short()
 
 

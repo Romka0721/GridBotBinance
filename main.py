@@ -2,6 +2,8 @@ from binance.client import Client
 from API import API_KEY, API_SEKRET
 import pandas
 import asyncio
+
+from bot import send_message
 from settings import symbol, quantity_dollars, round_tiker
 
 client = Client(API_KEY, API_SEKRET)
@@ -101,6 +103,7 @@ async def quantity1_short():
 async def pozity():
     poz_t1 = len(pandas.DataFrame(client.futures_get_open_orders(symbol=symbol)))
     print('Поставлено ліміток: ', poz_t1)
+    await send_message(poz_t1)
     return poz_t1
 
 
@@ -162,9 +165,10 @@ async def main():
                     price_test = await last_limit_order()
                     await create_order_long()
                     await create_order_short()
-
-                    print('поставив лімітку short: ', await limit_order_max(price_test))
-                    print('поставив лімітку long: ', await limit_order_min(price_test))
+                    result_long = f'Поставив ліиітку long: {limit_order_max(price_test)}'
+                    result_short = f'Поставив ліиітку long: {limit_order_min(price_test)}'
+                    await send_message(result_long)
+                    await send_message(result_short)
                 else:
                     print('Чекаю')
                     await asyncio.sleep(120)

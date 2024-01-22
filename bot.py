@@ -1,14 +1,5 @@
 from API import TOKEN_BOT, TOKEN_CANAL_ID
-import asyncio
-import logging
-import sys
-from os import getenv
-
-from aiogram import Bot, Dispatcher, types
-from aiogram.enums import ParseMode
-from aiogram.filters import CommandStart
-from aiogram.types import Message
-from aiogram.utils.markdown import hbold
+from aiogram import Bot, Dispatcher
 
 bot = Bot(TOKEN_BOT)
 dp = Dispatcher()

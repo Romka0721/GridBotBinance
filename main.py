@@ -1,6 +1,5 @@
 from binance.client import Client
 from API import API_KEY, API_SEKRET
-import pandas
 import asyncio
 
 from bot import send_info
@@ -96,7 +95,7 @@ async def quantity1_short():
 
 # Визначаємо кількість відкритих позицій
 async def pozity():
-    poz_t1 = len(pandas.DataFrame(client.futures_get_open_orders(symbol=symbol)))
+    poz_t1 = len(client.futures_get_open_orders(symbol=symbol))
     print('Поставлено ліміток: ', poz_t1)
     return poz_t1
 

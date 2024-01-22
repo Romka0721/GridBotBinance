@@ -1,17 +1,23 @@
-
-from loguru import logger
-from notifiers.logging import NotificationHandler
 from API import TOKEN_BOT, TOKEN_CANAL_ID
+import asyncio
+import logging
+import sys
+from os import getenv
 
-params = {
-    'token': TOKEN_BOT,
-    'chat_id': TOKEN_CANAL_ID
-}
-tg_handler = NotificationHandler(provider='telegram', defaults=params)
-logger.add(tg_handler)
+from aiogram import Bot, Dispatcher, types
+from aiogram.enums import ParseMode
+from aiogram.filters import CommandStart
+from aiogram.types import Message
+from aiogram.utils.markdown import hbold
+
+bot = Bot(TOKEN_BOT)
+dp = Dispatcher()
 
 
-async def send_message(resalt):
-    logger.info(resalt)
+@dp.message()
+async def send_info(result):
+    await bot.send_message(chat_id=TOKEN_CANAL_ID, text=str(result))
+
+
 
 

@@ -1,5 +1,5 @@
 
 
-symbol = '1000PEPEUSDT'
+symbol = 'SUIUSDT'
 quantity_dollars = 30
-round_tiker = 7
+round_tiker = 4

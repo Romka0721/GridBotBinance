@@ -1,3 +1,5 @@
+from typing import Optional
+
 from binance.client import Client
 from API import API_KEY, API_SEKRET
 
@@ -11,15 +13,20 @@ class SymbolInfo:
     def last_open_limit_order(self):
         trades = client.futures_account_trades(symbol=self.symbol)
         last_trade = float(trades[-1]['price'])
+        print(f'Останній закритий лімітний ордер: {last_trade}')
         return last_trade
 
     def balance_on_position(self):
         positions = client.futures_position_information(symbol=self.symbol)
         position = positions[0]
-        return float(position['notional']), float(position['unRealizedProfit'])
+        a = float(position['notional']), float(position['unRealizedProfit'])
+        print(f'Баланс в позиції: {a}')
+        return a
 
     def open_quantity_position(self):
-        return len(client.futures_get_open_orders(symbol=self.symbol))
+        a = len(client.futures_get_open_orders(symbol=self.symbol))
+        print(f'Кількість ліміток: {a}')
+        return a
 
 
 class LimitOrderPosition:
@@ -41,6 +48,7 @@ class LimitOrderPosition:
             limit_order_long = round(self.last_limit_order - (self.last_limit_order * 0.045), self.round_tiker)
         else:
             limit_order_long = round(self.last_limit_order - (self.last_limit_order * 0.03), self.round_tiker)
+        print(f'Лімітний ордер лонг: {limit_order_long}')
         return limit_order_long
 
     def limit_order_short(self):
@@ -50,6 +58,7 @@ class LimitOrderPosition:
             limit_order_short = round(self.last_limit_order + (self.last_limit_order * 0.045), self.round_tiker)
         else:
             limit_order_short = round(self.last_limit_order + (self.last_limit_order * 0.03), self.round_tiker)
+        print(f'Лімітний ордер шорт: {limit_order_short}')
         return limit_order_short
 
     def quantity_order_long(self):
@@ -59,6 +68,7 @@ class LimitOrderPosition:
             quantity_order_long = round((self.dollars * 0.6) / self.last_limit_order)
         else:
             quantity_order_long = round(self.quantity_coin)
+        print(f'Кількість в позиції в лонг: {quantity_order_long}')
         return quantity_order_long
 
     def quantity_order_short(self):
@@ -68,11 +78,12 @@ class LimitOrderPosition:
             quantity_order_short = round((self.dollars * 0.6) / self.last_limit_order)
         else:
             quantity_order_short = round(self.quantity_coin)
+        print(f'Кількість в позиції в шорт: {quantity_order_short}')
         return quantity_order_short
 
 
 class CreateOrder:
-    def __init__(self, symbol, quantity, price):
+    def __init__(self, symbol, quantity: Optional[float] = None, price: Optional[float] = None):
         self.symbol = symbol
         self.quantity = quantity
         self.price = price
@@ -86,6 +97,7 @@ class CreateOrder:
             price=self.price,
             timeInForce='GTC'
         )
+        print(f'Ордер лонг: {create_order}')
         return create_order
 
     def create_order_short(self):
@@ -97,13 +109,14 @@ class CreateOrder:
             price=self.price,
             timeInForce='GTC'
         )
+        print(f'Ордер шорт: {create_order}')
         return create_order
 
     def delete_orders(self):
         client.futures_cancel_all_open_orders(symbol=self.symbol)
+        print(f'Закрив всі ордери')
 
     def create_order_close_position(self):
-        client.futures_cancel_all_open_orders(symbol=self.symbol)
         open_positions = client.futures_position_information(symbol=self.symbol)
         for position in open_positions:
             if float(position['positionAmt']) > 0:
@@ -117,4 +130,5 @@ class CreateOrder:
                 type='MARKET',
                 quantity=quantity
             )
+            print(f'Закрив всю позицію: {create_order}')
             return create_order

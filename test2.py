@@ -16,6 +16,7 @@ def main():
                 create_order.delete_orders()
                 price_test = trade_work.last_open_limit_order()
                 print(price_test, '2')
+                create_order.create_order_long()
             else:
                 pass
 
@@ -26,5 +27,5 @@ def main():
 if __name__ == "__main__":
     trade_work = SymbolInfo(SYMBOL)
     trade_work_position = LimitOrderPosition(SYMBOL, QU_DOLLARS)
-    create_order = CreateOrder(SYMBOL, trade_work_position.quantity_order_long(), trade_work_position.limit_order_long())
+    create_order = CreateOrder(SYMBOL)
     main()

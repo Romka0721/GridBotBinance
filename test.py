@@ -1,5 +1,3 @@
-from typing import Optional
-
 from binance.client import Client
 from API import API_KEY, API_SEKRET
 
@@ -11,9 +9,6 @@ class SymbolInfo:
         self.symbol = symbol
 
     def last_open_limit_order(self):
-        return self.update_last_open_limit_order()
-
-    def update_last_open_limit_order(self):
         trades = client.futures_account_trades(symbol=self.symbol)
         last_trade = float(trades[-1]['price'])
         print(f'Останній закритий лімітний ордер: {last_trade}')
@@ -117,7 +112,7 @@ class CreateOrder:
         client.futures_cancel_all_open_orders(symbol=self.symbol)
         print(f'Закрив всі ордери')
 
-    def create_order_close_position(self):
+    def close_position(self):
         open_positions = client.futures_position_information(symbol=self.symbol)
         for position in open_positions:
             if float(position['positionAmt']) > 0:

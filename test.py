@@ -1,3 +1,5 @@
+from typing import Optional
+
 from binance.client import Client
 from API import API_KEY, API_SEKRET
 

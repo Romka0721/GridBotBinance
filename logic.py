@@ -41,21 +41,21 @@ class LimitOrderPosition:
 
     def limit_order_long(self):
         if self.balance_on_position < self.dollars * -5 or self.balance_on_position > self.dollars * 3:
-            limit_order_long = round(self.last_limit_order - (self.last_limit_order * 0.006), self.round_tiker)
+            limit_order_long = round(self.last_limit_order - (self.last_limit_order * 0.06), self.round_tiker)
         elif self.balance_on_position < self.dollars * -3 or self.balance_on_position > self.dollars * 2:
-            limit_order_long = round(self.last_limit_order - (self.last_limit_order * 0.0045), self.round_tiker)
+            limit_order_long = round(self.last_limit_order - (self.last_limit_order * 0.045), self.round_tiker)
         else:
-            limit_order_long = round(self.last_limit_order - (self.last_limit_order * 0.003), self.round_tiker)
+            limit_order_long = round(self.last_limit_order - (self.last_limit_order * 0.03), self.round_tiker)
         print(f'Лімітний ордер лонг: {limit_order_long}')
         return limit_order_long
 
     def limit_order_short(self):
         if self.balance_on_position < self.dollars * -3 or self.balance_on_position > self.dollars * 5:
-            limit_order_short = round(self.last_limit_order + (self.last_limit_order * 0.006), self.round_tiker)
+            limit_order_short = round(self.last_limit_order + (self.last_limit_order * 0.06), self.round_tiker)
         elif self.balance_on_position < self.dollars * -2 or self.balance_on_position > self.dollars * 3:
-            limit_order_short = round(self.last_limit_order + (self.last_limit_order * 0.0045), self.round_tiker)
+            limit_order_short = round(self.last_limit_order + (self.last_limit_order * 0.045), self.round_tiker)
         else:
-            limit_order_short = round(self.last_limit_order + (self.last_limit_order * 0.003), self.round_tiker)
+            limit_order_short = round(self.last_limit_order + (self.last_limit_order * 0.03), self.round_tiker)
         print(f'Лімітний ордер шорт: {limit_order_short}')
         return limit_order_short
 

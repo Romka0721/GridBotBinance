@@ -5,10 +5,10 @@ from logic import SymbolInfo, LimitOrderPosition, CreateOrder
 def main(symbol, quant):
     while True:
         try:
-            if SymbolInfo(symbol).balance_on_position()[1] > quant*-0.5:
-                sleep(2)
+            if SymbolInfo(symbol).balance_on_position()[1] > quant*-2:
+                sleep(5)
                 if SymbolInfo(symbol).open_quantity_position() < 2:
-                    sleep(10)
+                    sleep(120)
                     work = LimitOrderPosition(symbol, quant)
                     create_order = CreateOrder(symbol)
                     create_order.delete_orders()

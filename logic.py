@@ -1,5 +1,8 @@
+
+
 from binance.client import Client
 from API import API_KEY, API_SEKRET
+from bot import send_message
 
 client = Client(API_KEY, API_SEKRET)
 
@@ -93,7 +96,11 @@ class CreateOrder:
             price=price,
             timeInForce='GTC'
         )
+        result = (f"{self.symbol}: order long.\n"
+                  f"Price: {float(create_order['price'])}\n"
+                  f"Quantity: {round(float(create_order['origQty']), 2)}")
         print(f'Ордер лонг: {create_order}')
+        send_message(result)
         return create_order
 
     def create_order_short(self, quantity, price):
@@ -105,7 +112,11 @@ class CreateOrder:
             price=price,
             timeInForce='GTC'
         )
+        result = (f"{self.symbol}: order short.\n"
+                  f"Price: {float(create_order['price'])}\n"
+                  f"Quantity: {round(float(create_order['origQty']), 2)}")
         print(f'Ордер шорт: {create_order}')
+        send_message(result)
         return create_order
 
     def delete_orders(self):

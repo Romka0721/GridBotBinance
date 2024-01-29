@@ -1,13 +1,18 @@
+from loguru import logger
+from notifiers.logging import NotificationHandler
 from API import TOKEN_BOT, TOKEN_CANAL_ID
-from aiogram import Bot, Dispatcher
 
-bot = Bot(TOKEN_BOT)
-dp = Dispatcher()
+params = {
+    'token': TOKEN_BOT,
+    'chat_id': TOKEN_CANAL_ID
+}
+
+tg = NotificationHandler(provider='telegram', defaults=params)
+logger.add(tg, format='{message}')
 
 
-@dp.message()
-async def send_info(result):
-    await bot.send_message(chat_id=TOKEN_CANAL_ID, text=str(result))
+def send_message(order_info):
+    logger.info(order_info)
 
 
 

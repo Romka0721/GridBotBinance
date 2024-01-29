@@ -7,7 +7,7 @@ from logic import SymbolInfo, LimitOrderPosition, CreateOrder
 def main(symbol, quant):
     while True:
         try:
-            if SymbolInfo(symbol).balance_on_position()[1] > quant*-2:
+            if SymbolInfo(symbol).balance_on_position()[1] > quant * -2:
                 sleep(2)
                 if SymbolInfo(symbol).open_quantity_position() < 2:
                     sleep(60)
@@ -28,4 +28,4 @@ def main(symbol, quant):
 
 
 if __name__ == "__main__":
-    main('SUIUSDT', 20)
+    main('1000PEPEUSDT', 100)

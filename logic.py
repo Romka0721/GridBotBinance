@@ -1,6 +1,5 @@
-
-
 from binance.client import Client
+
 from API import API_KEY, API_SEKRET
 from bot import send_message
 

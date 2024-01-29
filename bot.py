@@ -1,5 +1,6 @@
 from loguru import logger
 from notifiers.logging import NotificationHandler
+
 from API import TOKEN_BOT, TOKEN_CANAL_ID
 
 params = {
@@ -13,7 +14,3 @@ logger.add(tg, format='{message}')
 
 def send_message(order_info):
     logger.info(order_info)
-
-
-
-

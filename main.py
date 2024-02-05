@@ -8,7 +8,7 @@ def main(symbol, quant):
     while True:
         try:
             if SymbolInfo(symbol).balance_on_position()[1] > quant * -2:
-                sleep(2)
+                sleep(20)
                 if SymbolInfo(symbol).open_quantity_position() < 2:
                     sleep(60)
                     work = LimitOrderPosition(symbol, quant)
@@ -25,7 +25,8 @@ def main(symbol, quant):
         except Exception as e:
             send_message(e)
             print(e)
+            sleep(60)
 
 
 if __name__ == "__main__":
-    main('1000PEPEUSDT', 100)
+    main('ETHUSDT', 100)

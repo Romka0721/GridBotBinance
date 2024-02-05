@@ -43,9 +43,9 @@ class LimitOrderPosition:
 
     def limit_order_long(self):
         if self.balance_on_position < self.dollars * -5 or self.balance_on_position > self.dollars * 3:
-            limit_order_long = round(self.last_limit_order - (self.last_limit_order * 0.06), self.round_tiker)
+            limit_order_long = round(self.last_limit_order - (self.last_limit_order * 0.05), self.round_tiker)
         elif self.balance_on_position < self.dollars * -3 or self.balance_on_position > self.dollars * 2:
-            limit_order_long = round(self.last_limit_order - (self.last_limit_order * 0.045), self.round_tiker)
+            limit_order_long = round(self.last_limit_order - (self.last_limit_order * 0.04), self.round_tiker)
         else:
             limit_order_long = round(self.last_limit_order - (self.last_limit_order * 0.03), self.round_tiker)
         print(f'Лімітний ордер лонг: {limit_order_long}')
@@ -53,9 +53,9 @@ class LimitOrderPosition:
 
     def limit_order_short(self):
         if self.balance_on_position < self.dollars * -3 or self.balance_on_position > self.dollars * 5:
-            limit_order_short = round(self.last_limit_order + (self.last_limit_order * 0.06), self.round_tiker)
+            limit_order_short = round(self.last_limit_order + (self.last_limit_order * 0.05), self.round_tiker)
         elif self.balance_on_position < self.dollars * -2 or self.balance_on_position > self.dollars * 3:
-            limit_order_short = round(self.last_limit_order + (self.last_limit_order * 0.045), self.round_tiker)
+            limit_order_short = round(self.last_limit_order + (self.last_limit_order * 0.04), self.round_tiker)
         else:
             limit_order_short = round(self.last_limit_order + (self.last_limit_order * 0.03), self.round_tiker)
         print(f'Лімітний ордер шорт: {limit_order_short}')
@@ -63,9 +63,9 @@ class LimitOrderPosition:
 
     def quantity_order_long(self):
         if self.balance_on_position > self.dollars * 3:
-            quantity_order_long = round(10 / self.last_limit_order)
+            quantity_order_long = round(22 / self.last_limit_order)
         elif self.balance_on_position > self.dollars * 1.6:
-            quantity_order_long = round((self.dollars * 0.6) / self.last_limit_order)
+            quantity_order_long = round((self.dollars * 0.7) / self.last_limit_order)
         else:
             quantity_order_long = round(self.quantity_coin)
         print(f'Кількість в позиції в лонг: {quantity_order_long}')
@@ -73,9 +73,9 @@ class LimitOrderPosition:
 
     def quantity_order_short(self):
         if self.balance_on_position < self.dollars * -3:
-            quantity_order_short = round(10 / self.last_limit_order)
+            quantity_order_short = round(22 / self.last_limit_order)
         elif self.balance_on_position < self.dollars * -1.6:
-            quantity_order_short = round((self.dollars * 0.6) / self.last_limit_order)
+            quantity_order_short = round((self.dollars * 0.7) / self.last_limit_order)
         else:
             quantity_order_short = round(self.quantity_coin)
         print(f'Кількість в позиції в шорт: {quantity_order_short}')

@@ -42,9 +42,9 @@ class LimitOrderPosition:
             self.round_tiker = 2
 
     def limit_order_long(self):
-        if self.balance_on_position < self.dollars * -5 or self.balance_on_position > self.dollars * 3:
+        if self.balance_on_position < self.dollars * -8 or self.balance_on_position > self.dollars * 8:
             limit_order_long = round(self.last_limit_order - (self.last_limit_order * 0.05), self.round_tiker)
-        elif self.balance_on_position < self.dollars * -3 or self.balance_on_position > self.dollars * 2:
+        elif self.balance_on_position < self.dollars * -4 or self.balance_on_position > self.dollars * 4:
             limit_order_long = round(self.last_limit_order - (self.last_limit_order * 0.04), self.round_tiker)
         else:
             limit_order_long = round(self.last_limit_order - (self.last_limit_order * 0.03), self.round_tiker)
@@ -52,9 +52,9 @@ class LimitOrderPosition:
         return limit_order_long
 
     def limit_order_short(self):
-        if self.balance_on_position < self.dollars * -3 or self.balance_on_position > self.dollars * 5:
+        if self.balance_on_position < self.dollars * -8 or self.balance_on_position > self.dollars * 8:
             limit_order_short = round(self.last_limit_order + (self.last_limit_order * 0.05), self.round_tiker)
-        elif self.balance_on_position < self.dollars * -2 or self.balance_on_position > self.dollars * 3:
+        elif self.balance_on_position < self.dollars * -4 or self.balance_on_position > self.dollars * 4:
             limit_order_short = round(self.last_limit_order + (self.last_limit_order * 0.04), self.round_tiker)
         else:
             limit_order_short = round(self.last_limit_order + (self.last_limit_order * 0.03), self.round_tiker)
